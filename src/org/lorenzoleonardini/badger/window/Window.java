@@ -3,9 +3,11 @@ package org.lorenzoleonardini.badger.window;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.List;
 
 import javax.swing.JFrame;
 
@@ -13,11 +15,7 @@ import org.lorenzoleonardini.badger.Camera;
 import org.lorenzoleonardini.badger.renderer.Screen;
 
 /**
- * The Window class manage the window
- * it
- * 
  * @author Lorenzo Leonardini
- *
  */
 public class Window extends Canvas
 {
@@ -32,17 +30,6 @@ public class Window extends Canvas
 
 	private Screen screen;
 
-	/**
-	 * Initialize the window
-	 * @param width
-	 *            the window width
-	 * @param height
-	 *            the window height
-	 * @param scale
-	 *            the scale
-	 * @param title
-	 *            the window title
-	 */
 	public Window(int width, int height, int scale, String title)
 	{
 		WIDTH = width;
@@ -64,12 +51,15 @@ public class Window extends Canvas
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
+		
 		frame.setVisible(true);
 	}
+	
+	public void setIconImages(List<Image> imgs)
+	{
+		frame.setIconImages(imgs);
+	}
 
-	/**
-	 * Render to the screen
-	 */
 	public void render(Camera camera)
 	{
 		BufferStrategy bs = getBufferStrategy();

@@ -5,7 +5,11 @@ package org.lorenzoleonardini.badger;
  * @author Lorenzo Leonardini
  *
  */
-public interface UpdateCallback
+public interface GameLoop
 {
-	public void update();
+	public void start();
+	
+	public void run();
+	
+	public void stop();
 }

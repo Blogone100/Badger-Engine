@@ -1,19 +1,37 @@
 package org.lorenzoleonardini.badger.physics;
 
 /**
- * The Material class stores the information about the object density to
- * calculate its mass
  * @author Lorenzo Leonardini
- *
  */
 public class Material
 {
 	private boolean transparent = false;
-	private double density;
 
-	public Material(int density)
+	private float bounciness = 1;
+	private double density;
+	
+	public Material(double density)
 	{
 		this.density = density;
+	}
+	
+	public void setBounciness(float bounciness)
+	{
+		if(bounciness > 1)
+			bounciness = 1;
+		else if(bounciness < 0)
+			bounciness = 0;
+		this.bounciness = bounciness;
+	}
+	
+	public float getBounciness()
+	{
+		return bounciness;
+	}
+
+	public double getDensity()
+	{
+		return density;
 	}
 
 	/**
@@ -26,21 +44,8 @@ public class Material
 		this.transparent = transparent;
 	}
 
-	/**
-	 * @return true if the object is transparent
-	 */
 	public boolean isTransparent()
 	{
 		return transparent;
-	}
-
-	public double getDensity()
-	{
-		return density;
-	}
-
-	public double getMass(int volume)
-	{
-		return density * volume / 250;
 	}
 }

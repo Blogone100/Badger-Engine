@@ -1,14 +1,19 @@
 package org.lorenzoleonardini.badger;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+
+import org.json.JSONObject;
 import org.lorenzoleonardini.badger.input.Input;
 import org.lorenzoleonardini.badger.input.Keyboard;
 import org.lorenzoleonardini.badger.input.Mouse;
 import org.lorenzoleonardini.badger.physics.ObjectManager;
 
 /**
- * Abstract class of the Engine
  * @author Lorenzo Leonardini
- *
  */
 public abstract class Engine extends Input
 {
@@ -22,10 +27,23 @@ public abstract class Engine extends Input
 	public Mouse mouse;
 	protected Camera camera;
 	
-	protected UpdateCallback loop = new UpdateCallback()
+	private final String VERSION = "v0.3.1Beta";
+
+	protected GameLoop loop = new GameLoop()
 	{
 		@Override
-		public void update()
+		public void start()
+		{
+		}
+		
+		@Override
+		public void run()
+		{
+		}
+		
+
+		@Override
+		public void stop()
 		{
 		}
 	};
@@ -37,17 +55,41 @@ public abstract class Engine extends Input
 		keyboard = new Keyboard(this);
 		mouse = new Mouse(this);
 		camera = new Camera(0, 0);
+		try
+		{
+			checkVersion();
+		}
+		catch (IOException e)
+		{
+			System.out.println("Can't check for a newest version\n\n");
+		}
 	}
-	
-	/**
-	 * Update keyboard and mouse
-	 */
-	protected void input()
+
+	private void checkVersion() throws IOException
+	{
+		URL url = new URL("https://api.github.com/repos/LorenzoLeonardini/Badger-Engine/releases/latest");
+		URLConnection conn = url.openConnection();
+		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+		JSONObject json = new JSONObject(br.readLine());
+		if(!VERSION.equals(json.getString("tag_name")))
+		{
+			System.out.println("NEW VERSION AVAILABLE! - \"" + json.getString("name") + "\"\n\t\t\t\tpublished in " + json.getString("published_at").split("T")[0] + ", by " + json.getJSONObject("author").getString("login"));
+			System.out.println(json.getString("body").replace("### Bug fixes:\r\n_none_", ""));
+			System.out.println(json.getString("body").replace("### Edits:\r\n_none_", ""));
+		}
+		else
+			System.out.println("No updates found\n\n");
+
+		br.close();
+	}
+
+	protected void handleInput()
 	{
 		keyboard.update();
 		mouse.update();
 	}
-	
+
 	/**
 	 * Calculate the delta value and the fps
 	 * @return
@@ -75,9 +117,6 @@ public abstract class Engine extends Input
 		return b;
 	}
 
-	/**
-	 * @return the delta value
-	 */
 	public double getDelta()
 	{
 		return dt;
@@ -87,7 +126,7 @@ public abstract class Engine extends Input
 	 * Set what the engine must do every loop cycle
 	 * @param callback
 	 */
-	public void update(UpdateCallback callback)
+	public void loop(GameLoop callback)
 	{
 		loop = callback;
 	}
@@ -96,11 +135,7 @@ public abstract class Engine extends Input
 	{
 		System.out.println("ENGINE > " + message);
 	}
-	
-	/**
-	 * 
-	 * @return the camera
-	 */
+
 	public Camera getCamera()
 	{
 		return camera;

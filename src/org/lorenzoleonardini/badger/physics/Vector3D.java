@@ -3,10 +3,7 @@ package org.lorenzoleonardini.badger.physics;
 import java.util.Random;
 
 /**
- * The Vector3D class represent a 3D vector
- * 
  * @author Lorenzo Leonardini
- *
  */
 public class Vector3D
 {
@@ -23,7 +20,7 @@ public class Vector3D
 
 	/**
 	 * Create a random vector. The magnitude will be used as maximum value of
-	 * its component
+	 * its length
 	 * @param magnitude
 	 * @return the created Vector
 	 */
@@ -51,15 +48,18 @@ public class Vector3D
 		return randomVector(1);
 	}
 
-	/**
-	 * Add a vector to this one
-	 * @param vec
-	 */
 	public void addVector(Vector3D vec)
 	{
 		x += vec.x;
 		y += vec.y;
 		z += vec.z;
+	}
+	
+	public void subtractVector(Vector3D vec)
+	{
+		x -= vec.x;
+		y -= vec.y;
+		z -= vec.z;
 	}
 
 	public String toString()
@@ -67,17 +67,11 @@ public class Vector3D
 		return "[x : " + x + " ; y :" + y + " ; z : " + z + "]";
 	}
 
-	/**
-	 * @return a new Vector with the exact components of this one
-	 */
 	public Vector3D copy()
 	{
 		return new Vector3D(x, y, z);
 	}
 
-	/**
-	 * Invert the vector components
-	 */
 	public void invert()
 	{
 		x *= -1;
@@ -85,23 +79,41 @@ public class Vector3D
 		z *= -1;
 	}
 
-	/**
-	 * Multiply the length of the vector with a number
-	 * @param d
-	 */
 	public void multiply(double d)
 	{
 		x *= d;
 		y *= d;
 		z *= d;
 	}
+	
+	public void multiply(double x, double y)
+	{
+		this.x *= x;
+		this.y *= y;
+	}
+	
+	public void multiply(double x, double y, double z)
+	{
+		this.x *= x;
+		this.y *= y;
+		this.z *= z;
+	}
 
-	/**
-	 * Normalize the vector. Its length will be 1
-	 */
 	public void normalize()
 	{
 		double length = Math.sqrt(x * x + y * y + z * z);
+		if(length == 0)
+			return;
 		multiply(1 / length);
+	}
+	
+	public double length()
+	{
+		return Math.sqrt(lengthSquare());
+	}
+	
+	public double lengthSquare()
+	{
+		return x * x + y * y + z * z;
 	}
 }
